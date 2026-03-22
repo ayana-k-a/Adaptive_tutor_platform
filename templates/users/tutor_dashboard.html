@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Tutor Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ profile.full_name|default:request.user.username }}</h2>
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm dashboard-card">
+            <div class="card-body">
+                <h4>Your Tutor Profile</h4>
+                <p><strong>Full Name:</strong> {{ profile.full_name|default:"Not added" }}</p>
+                <p><strong>Roll Number:</strong> {{ profile.roll_number|default:"Not added" }}</p>
+                <p><strong>Phone:</strong> {{ profile.phone|default:"Not added" }}</p>
+                <p><strong>Subjects:</strong> {{ profile.subjects|default:"Not added" }}</p>
+                <p><strong>Teaching Style:</strong> {{ profile.teaching_style|default:"Not selected" }}</p>
+                <p><strong>Mode:</strong> {{ profile.available_mode|default:"Not selected" }}</p>
+                <p><strong>Availability:</strong> {{ profile.availability|default:"Not added" }}</p>
+
+                <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit Tutor Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm dashboard-card">
+            <div class="card-body">
+                <h4>Tutor Info</h4>
+                <p>Keep your subjects, teaching style, and timings updated for better matches.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h4>Session Requests</h4>
+
+    {% for b in bookings %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <p><strong>Learner:</strong> {{ b.learner.username }}</p>
+                <p><strong>Subject:</strong> {{ b.subject }}</p>
+                <p><strong>Date:</strong> {{ b.date }}</p>
+                <p><strong>Time:</strong> {{ b.time }}</p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {% if b.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif b.status == 'accepted' %}
+                        <span class="badge bg-success">Accepted</span>
+                    {% elif b.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% endif %}
+                </p>
+
+                {% if b.status == 'pending' %}
+                    <div class="d-flex gap-2">
+                        <form method="post" action="{% url 'update_booking_status' b.id 'accepted' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+
+                        <form method="post" action="{% url 'update_booking_status' b.id 'rejected' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info mt-3">
+            No session requests yet.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

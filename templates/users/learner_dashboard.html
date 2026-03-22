@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Learner Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ profile.full_name|default:request.user.username }}</h2>
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm dashboard-card">
+            <div class="card-body">
+                <h4>Your Profile</h4>
+                <p><strong>Full Name:</strong> {{ profile.full_name|default:"Not added" }}</p>
+                <p><strong>Roll Number:</strong> {{ profile.roll_number|default:"Not added" }}</p>
+                <p><strong>Phone:</strong> {{ profile.phone|default:"Not added" }}</p>
+                <p><strong>Subject Needed:</strong> {{ profile.subject_needed|default:"Not added" }}</p>
+                <p><strong>Learning Style:</strong> {{ profile.learning_style|default:"Not detected" }}</p>
+                <p><strong>Preferred Mode:</strong> {{ profile.preferred_mode|default:"Not selected" }}</p>
+                <p><strong>Availability:</strong> {{ profile.availability|default:"Not added" }}</p>
+
+                <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm dashboard-card">
+            <div class="card-body">
+                <h4>Quick Actions</h4>
+                <p>Find tutors based on your subject and learning style.</p>
+                <a href="{% url 'match_tutors' %}" class="btn btn-primary">Find Tutors</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-5">
+    <h4>Your Session Requests</h4>
+
+    {% for b in learner_bookings %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <p><strong>Tutor:</strong> {{ b.tutor.username }}</p>
+                <p><strong>Subject:</strong> {{ b.subject }}</p>
+                <p><strong>Date:</strong> {{ b.date }}</p>
+                <p><strong>Time:</strong> {{ b.time }}</p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {% if b.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif b.status == 'accepted' %}
+                        <span class="badge bg-success">Accepted</span>
+                    {% elif b.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% endif %}
+                </p>
+                {% if b.status == 'accepted' %}
+    <div class="mt-2 p-2 border rounded bg-light">
+        <p><strong>Contact Tutor:</strong></p>
+        <p><strong>Name:</strong> {{ b.tutor.tutorprofile.full_name|default:b.tutor.username }}</p>
+        <p><strong>Roll Number:</strong> {{ b.tutor.tutorprofile.roll_number|default:"Not added" }}</p>
+        <p><strong>Email:</strong> {{ b.tutor.email }}</p>
+        <p><strong>Phone:</strong> {{ b.tutor.tutorprofile.phone|default:"Not added" }}</p>
+    </div>
+{% endif %}
+                {% if b.status == 'accepted' %}
+    {% if not b.feedback %}
+        <a href="{% url 'give_feedback' b.id %}" class="btn btn-primary btn-sm mt-2">
+            Give Feedback
+        </a>
+    {% else %}
+        <span class="badge bg-secondary">Feedback Submitted</span>
+    {% endif %}
+{% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info mt-3">
+            No session requests yet.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

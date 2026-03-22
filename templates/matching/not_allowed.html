@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Not Allowed{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+    <h4>This page is only for learners.</h4>
+    <a href="{% url 'dashboard' %}" class="btn btn-dark mt-2">Back to Dashboard</a>
+</div>
+{% endblock %}

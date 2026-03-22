@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | Adaptive Tutor{% endblock %}
+
+{% block content %}
+<section class="hero-section text-center">
+    <div class="row align-items-center">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-5 fw-bold mb-3">AI-Based Learning Style Detection & Adaptive Tutor Matching</h1>
+            <p class="lead text-muted mb-4">
+                A smart peer tutoring platform that matches learners with tutors based on
+                subject needs, availability, and teaching-learning style compatibility.
+            </p>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg me-2">Go to Dashboard</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-2">Get Started</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="mt-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Learning Style Detection</h4>
+                    <p class="card-text">
+                        Learners answer a short questionnaire and the system identifies their learning style.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Adaptive Tutor Matching</h4>
+                    <p class="card-text">
+                        Tutors are ranked using subject compatibility, teaching style, preferred mode, and availability.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Peer Learning Platform</h4>
+                    <p class="card-text">
+                        Students can join as learners or tutors and build a collaborative academic support system.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

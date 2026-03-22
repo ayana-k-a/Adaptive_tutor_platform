@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Matched Tutors{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Matched Tutors</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <p class="mb-1"><strong>Learner:</strong> {{ learner.user.username }}</p>
+        <p class="mb-1"><strong>Subject:</strong> {{ learner.subject_needed }}</p>
+        <p class="mb-0"><strong>Learning Style:</strong> {{ learner.learning_style }}</p>
+    </div>
+</div>
+
+{% if matched_tutors %}
+    <div class="row g-4">
+        {% for item in matched_tutors %}
+        <div class="col-md-6">
+            <div class="card shadow-sm tutor-card h-100">
+                <div class="card-body">
+                    <h4>{{ item.tutor.full_name|default:item.tutor.user.username }}</h4>
+                    <p><strong>Roll Number:</strong> {{ item.tutor.roll_number|default:"Not added" }}</p>
+                    <p><strong>Subjects:</strong> {{ item.tutor.subjects }}</p>
+                    <p><strong>Teaching Style:</strong> {{ item.tutor.teaching_style }}</p>
+                    <p><strong>Mode:</strong> {{ item.tutor.available_mode }}</p>
+                    <p><strong>Availability:</strong> {{ item.tutor.availability }}</p>
+                    <span class="badge bg-success fs-6">Match Score: {{ item.score }}</span>
+
+<form method="post" action="{% url 'book_session' item.tutor.user.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary mt-3 w-100">
+        Request Session
+    </button>
+</form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">No tutors matched yet.</div>
+{% endif %}
+{% endblock %}

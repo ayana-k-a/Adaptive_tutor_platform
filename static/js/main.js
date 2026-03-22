@@ -1,0 +1,1 @@
+console.log("Adaptive Tutor frontend loaded.");
